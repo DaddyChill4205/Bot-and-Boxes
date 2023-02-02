@@ -196,21 +196,33 @@ class DoubleInputBox(object):
         self.root.mainloop()
 
 
-def message(text=None, title=None, button_options="Ok"):
-    msg = MessageBox(text=text, title=title, button_options=button_options).message()
+def message(text=None, title=None, button_options="Ok", Wbg="white", Lbg="white", Lfg="black"):
+    # text: the text to be displayed, title: the title of the window, button_options: the text displayed on the buttons, 
+    # Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text (name of color or HEX),
+    # Lfg: the foreground color of the text (name of color or HEX), anchor: how the text is aligned (CENTER, N, NE, E, SE, S, SW, W, NW)
+    msg = MessageBox(text=text, title=title, button_options=button_options, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg, anchor=anchor).message()
     return msg
 
-def buttons(text=None, title=None, button_options=["Ok"]):
-    bttn = ButtonBox(text=text, title=title, button_options=button_options).options()
+def buttons(text=None, title=None, button_options=["Ok"], Wbg="white", Lbg="white", Lfg="black"):
+    # text: the text to be displayed, title: the title of the window, button_options: the text displayed on the buttons, 
+    # Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text (name of color or HEX),
+    # Lfg: the foreground color of the text (name of color or HEX)
+    bttn = ButtonBox(text=text, title=title, button_options=button_options, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg).options()
     return bttn
 
-def input(text=None, title=None, show=None):
-    box = InputBox(text=text, title=title, show=show)
+def input(text=None, title=None, show=None, Wbg="white", Lbg="white", Ebg="white", Lfg="black"):
+    # text: the text to be displayed, title: the title of the window, show: what other character the text should be displayed 
+    # as(*, #, etc), Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text 
+    # (name of color or HEX),Lfg: the foreground color of the text (name of color or HEX)
+    box = InputBox(text=text, title=title, show=show, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg)
     box.input()
     return box.result
 
-def double_input(text1=None, text2=None, title=None, show1=None, show2="*"):
-    box = DoubleInputBox(text1=text1, text2=text2, title=title, show1=show1, show2=show2)
+def double_input(text1=None, text2=None, title=None, show1=None, show2="*", Wbg="white", Lbg1="white", Lfg1="black", Lbg2="white", Lfg2="black", Ebg1="white", Ebg2="white"):
+    # text: the text to be displayed, title: the title of the window, show: what other character the text should be displayed 
+    # as(*, #, etc), Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text 
+    # (name of color or HEX),Lfg: the foreground color of the text (name of color or HEX)
+    box = DoubleInputBox(text1=text1, text2=text2, title=title, show1=show1, show2=show2, Wbg=Wbg, Lbg1=Lbg1, Lfg1=Lfg1, Lbg2=Lbg2, Lfg2=Lfg2, Ebg1=Ebg1, Ebg2=Ebg2)
     box.input()
     try:
         final_result = box.result + " " + box.result2
