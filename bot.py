@@ -102,3 +102,5 @@ def found(image_name, confidence = .8, region = (0, 0, 1920, 1080)):
 if __name__ == "__main__":
     # test some stuff
     center_mouse()
+
+#did it work?
