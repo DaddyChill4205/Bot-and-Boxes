@@ -199,7 +199,7 @@ class DoubleInputBox(object):
 def message(text=None, title=None, button_options="Ok", Wbg="white", Lbg="white", Lfg="black"):
     # text: the text to be displayed, title: the title of the window, button_options: the text displayed on the buttons, 
     # Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text (name of color or HEX),
-    # Lfg: the foreground color of the text (name of color or HEX), anchor: how the text is aligned (CENTER, N, NE, E, SE, S, SW, W, NW)
+    # Lfg: the foreground color of the text (name of color or HEX)
     msg = MessageBox(text=text, title=title, button_options=button_options, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg, anchor=anchor).message()
     return msg
 
