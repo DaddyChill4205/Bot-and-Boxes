@@ -200,7 +200,7 @@ def message(text=None, title=None, button_options="Ok", Wbg="white", Lbg="white"
     # text: the text to be displayed, title: the title of the window, button_options: the text displayed on the buttons, 
     # Wbg: the background color of the window (name of color or HEX), Lbg: the background color of the text (name of color or HEX),
     # Lfg: the foreground color of the text (name of color or HEX)
-    msg = MessageBox(text=text, title=title, button_options=button_options, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg, anchor=anchor).message()
+    msg = MessageBox(text=text, title=title, button_options=button_options, Wbg=Wbg, Lbg=Lbg, Lfg=Lfg).message()
     return msg
 
 def buttons(text=None, title=None, button_options=["Ok"], Wbg="white", Lbg="white", Lfg="black"):
