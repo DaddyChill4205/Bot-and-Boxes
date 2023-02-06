@@ -12,7 +12,7 @@ CURRENTLY IN BETA TESTING
 class MessageBox(object):
     #use tkinter to create a window with a label and a button, that returns the text of the button pressed
 
-    def __init__(self, text, title, button_options, Wbg="white", Lbg="white", Lfg="black"):
+    def __init__(self, text, title, button_options, Wbg="white", Lbg="white", Lfg="black", justify=LEFT, font="consolas", btnfont="consolas"):
         self.value = None
         self.root = None
         self.text = text
@@ -21,6 +21,9 @@ class MessageBox(object):
         self.Wbg = Wbg
         self.Lbg = Lbg
         self.Lfg = Lfg
+        self.justify = justify
+        self.font = font
+        self.btnfont = btnfont
 
     def center(self):
         self.root.update_idletasks()
@@ -35,10 +38,10 @@ class MessageBox(object):
         self.root.attributes("-topmost", True)
         self.root.after(1, lambda: self.root.focus_force())
         self.root.title(self.title)
-        Label(self.root, text=self.text, justify=CENTER, bg=self.Lbg, fg=self.Lfg).pack(padx=25, pady=10)
-        tk.Button(self.root, text = self.button_options, command = self.finish).pack(side=LEFT, padx=25, pady=10)
+        Label(self.root, text=self.text, justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font).pack(padx=25, pady=10)
+        tk.Button(self.root, text = self.button_options, font=self.btnfont, command = self.finish).pack(side=LEFT, padx=25, pady=10)
         self.root.bind("<Return>", lambda event: self.finish())
-        tk.Button(self.root, text = "Cancel", command = self.root.destroy).pack(side=RIGHT, padx=25, pady=10)
+        tk.Button(self.root, text = "Cancel", font=self.btnfont, command = self.root.destroy).pack(side=RIGHT, padx=25, pady=10)
         self.center()
         self.root.mainloop()
         return self.value
@@ -52,7 +55,7 @@ class ButtonBox(object):
     A message box that returns the text of the button pressed. Can have as many buttons as you want, as long as there is at least one. 
     
     '''
-    def __init__(self, text, title, button_options, Wbg="white", Lbg="white", Lfg="black"):
+    def __init__(self, text, title, button_options, Wbg="white", Lbg="white", Lfg="black", font="consolas", btnfont="consolas"):
         self.value = None
         self.root = None
         self.button_options = button_options
@@ -61,6 +64,8 @@ class ButtonBox(object):
         self.Wbg = Wbg
         self.Lbg = Lbg
         self.Lfg = Lfg
+        self.font = font
+        self.btnfont = btnfont
     def center(self):
         self.root.update_idletasks()
         width, height = (self.root.winfo_width(), self.root.winfo_height())
@@ -73,15 +78,15 @@ class ButtonBox(object):
         self.root.attributes("-topmost", True)
         self.root.focus_force() # just in case
         self.root.title(self.title)
-        Label(self.root, text=self.text, justify=CENTER, bg=self.Lbg, fg=self.Lfg).grid(columnspan=len(self.button_options), padx=25, pady=10)
+        Label(self.root, text=self.text, justify=CENTER, bg=self.Lbg, fg=self.Lfg, font=self.font).grid(columnspan=len(self.button_options), padx=25, pady=10)
         if type(self.button_options) == str:
             self.button_options = [self.button_options]
         if type(self.button_options) == list or tuple:
                 for index, text in enumerate(self.button_options):
                     if index < 10:
-                        tk.Button(self.root, text = f"{index + 1}: {text}", command = lambda index = index: self.finish(self.button_options[index])).grid(row=3, column=index, padx=25, pady=10)
+                        tk.Button(self.root, text = f"{index + 1}: {text}", font=self.btnfont, command = lambda index = index: self.finish(self.button_options[index])).grid(row=3, column=index, padx=25, pady=10)
                         self.root.bind(str(index + 1), lambda event, index = index: self.finish(self.button_options[index]))
-                        tk.Button(self.root, text = "Cancel", command = self.root.destroy).grid(row=4, columnspan=len(self.button_options), padx=25, pady=10)
+                        tk.Button(self.root, text = "Cancel", font=self.btnfont, command = self.root.destroy).grid(row=4, columnspan=len(self.button_options), padx=25, pady=10)
                         self.root.bind("<Escape>", lambda event: self.root.destroy())
                         
 
@@ -99,7 +104,7 @@ class InputBox(object):
     A message box that returns the text of the entry.
     
     '''
-    def __init__(self, text, title = '', show = None, Wbg="white", Lbg="white", Ebg="white", Lfg="black"):
+    def __init__(self, text, title = '', show = None, Wbg="white", Lbg="white", Ebg="white", Lfg="black", font="consolas", entfont="consolas", btnfont="consolas"):
         self.value = None
         self.root = None
         self.text = text
@@ -110,6 +115,9 @@ class InputBox(object):
         self.Wbg = Wbg
         self.Ebg = Ebg
         self.Lfg = Lfg
+        self.font = font
+        self.entfont = entfont
+        self.btnfont = btnfont
 
     def center(self):
         self.root.update_idletasks()
@@ -128,13 +136,13 @@ class InputBox(object):
         self.root.attributes("-topmost", True)
         self.root.focus_force() # just in case
         self.root.title(self.title)
-        Label(self.root, text=self.text, bg=self.Lbg, fg=self.Lfg).grid(columnspan = 2)
-        self.entry = Entry(self.root, show=self.show, bg=self.Ebg)
+        Label(self.root, text=self.text, bg=self.Lbg, fg=self.Lfg, font=self.font).grid(columnspan = 2)
+        self.entry = Entry(self.root, show=self.show, bg=self.Ebg, font=self.entfont)
         self.entry.focus_set()
         self.entry.grid(columnspan = 2)
-        self.ok_button = Button(self.root, text = "OK", command = self.return_entry)
+        self.ok_button = Button(self.root, text = "OK", font=self.btnfont, command = self.return_entry)
         self.ok_button.grid(row=3, column=0, padx=25, pady=10)
-        Button(self.root, text = "Cancel", command = lambda: self.root.destroy()).grid(row=3, column=1, padx=25, pady=10)
+        Button(self.root, text = "Cancel", font=self.btnfont, command = lambda: self.root.destroy()).grid(row=3, column=1, padx=25, pady=10)
         self.center()
         self.root.bind("<Return>", lambda e = None: self.return_entry())
         self.root.bind("<Escape>", lambda e = None: self.root.destroy())
@@ -145,7 +153,7 @@ class DoubleInputBox(object):
     A message box that allows for two seperate text entries, with two different labels. Wil return ("text_input1", "text_input2").
     
     '''
-    def __init__(self, text1, text2, title = None, show1 = None, show2 = None, Wbg="white", Lbg1="white", Lfg1="black", Lbg2="white", Lfg2="black", Ebg1="white", Ebg2="white"):
+    def __init__(self, text1, text2, title = None, show1 = None, show2 = None, Wbg="white", Lbg1="white", Lfg1="black", Lbg2="white", Lfg2="black", Ebg1="white", Ebg2="white", font1="consolas", font2="consolas", entfont1="consolas", entfont2="consolas", btnfont="consolas"):
         self.value = None
         self.root = None
         self.text1 = text1
@@ -161,6 +169,11 @@ class DoubleInputBox(object):
         self.Ebg2 = Ebg2
         self.Lfg1 = Lfg1
         self.Lfg2 = Lfg2
+        self.font1 = font1
+        self.font2 = font2
+        self.btnfont = btnfont
+        self.entfont1 = entfont1
+        self.entfont2 = entfont2
 
     def center(self):
         self.root.update_idletasks()
@@ -180,16 +193,16 @@ class DoubleInputBox(object):
         self.root.attributes("-topmost", True)
         self.root.focus_force() # just in case
         self.root.title(self.title)
-        Label(self.root, text=self.text1, bg=self.Lbg1, fg=self.Lfg1).grid(columnspan = 2)
-        self.entry1 = Entry(self.root, show=self.show1, bg=self.Ebg1)
+        Label(self.root, text=self.text1, bg=self.Lbg1, fg=self.Lfg1, font=self.font1).grid(columnspan = 2)
+        self.entry1 = Entry(self.root, show=self.show1, bg=self.Ebg1, font=self.entfont1)
         self.entry1.focus_set()
         self.entry1.grid(columnspan = 2)
-        Label(self.root, text=self.text2, bg=self.Lbg2, fg=self.Lfg2).grid(columnspan = 2)
-        self.entry2 = Entry(self.root, show=self.show2, bg=self.Ebg2)
+        Label(self.root, text=self.text2, bg=self.Lbg2, fg=self.Lfg2, font=self.font2).grid(columnspan = 2)
+        self.entry2 = Entry(self.root, show=self.show2, bg=self.Ebg2, font=self.entfont2)
         self.entry2.grid(columnspan = 2)
-        self.ok_button = Button(self.root, text = "OK", command = self.return_entry)
+        self.ok_button = Button(self.root, text = "OK", font=self.btnfont, command = self.return_entry)
         self.ok_button.grid(row=4, column=0, padx=25, pady=10)
-        Button(self.root, text = "Cancel", command = lambda: self.root.destroy()).grid(row=4, column=1, padx=25, pady=10)
+        Button(self.root, text = "Cancel", font=self.btnfont, command = lambda: self.root.destroy()).grid(row=4, column=1, padx=25, pady=10)
         self.center()
         self.root.bind("<Return>", lambda e = None: self.return_entry())
         self.root.bind("<Escape>", lambda e = None: self.root.destroy())
