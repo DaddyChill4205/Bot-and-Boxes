@@ -52,7 +52,7 @@ class MessageBox(object):
 
 class ButtonBox(object):
     '''
-    A message box that returns the text of the button pressed. Can have as many buttons as you want, as long as there is at least one. 
+    A message box that returns the text of the button pressed. Can have as many buttons as you want. 
     
     '''
     def __init__(self, text, title, button_options, Wbg="white", Lbg="white", Lfg="black", font="consolas", btnfont="consolas"):
@@ -138,7 +138,7 @@ class InputBox(object):
         self.root.title(self.title)
         Label(self.root, text=self.text, bg=self.Lbg, fg=self.Lfg, font=self.font).grid(columnspan = 2)
         self.entry = Entry(self.root, show=self.show, bg=self.Ebg, font=self.entfont)
-        self.entry.focus_set()
+        self.entry.focus_force()
         self.entry.grid(columnspan = 2)
         self.ok_button = Button(self.root, text = "OK", font=self.btnfont, command = self.return_entry)
         self.ok_button.grid(row=3, column=0, padx=25, pady=10)
@@ -195,7 +195,7 @@ class DoubleInputBox(object):
         self.root.title(self.title)
         Label(self.root, text=self.text1, bg=self.Lbg1, fg=self.Lfg1, font=self.font1).grid(columnspan = 2)
         self.entry1 = Entry(self.root, show=self.show1, bg=self.Ebg1, font=self.entfont1)
-        self.entry1.focus_set()
+        self.entry1.focus_force()
         self.entry1.grid(columnspan = 2)
         Label(self.root, text=self.text2, bg=self.Lbg2, fg=self.Lfg2, font=self.font2).grid(columnspan = 2)
         self.entry2 = Entry(self.root, show=self.show2, bg=self.Ebg2, font=self.entfont2)
