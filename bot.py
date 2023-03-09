@@ -46,9 +46,7 @@ def search_and_click(image_name, double = False, go_back = True, below = 0, time
     while found_it == None:
         if time.time() - start >= timeout:
             return False
-        print("looking for", image_name)
         found_it = pyautogui.locateOnScreen(image_name, region=region, confidence=confidence)
-    print("found", image_name)
     x, y = found_it[0], found_it[1]
     pyautogui.moveTo(x, y + below)
     time.sleep(0.1)
@@ -64,7 +62,6 @@ def click_if_exists(image_name, double = False, go_back = True, below = 0, confi
     original_position = pyautogui.position()
     found_it = pyautogui.locateOnScreen(image_name, region=region, confidence=confidence)
     if found_it != None:
-        print("found", image_name)
         x, y = found_it[0], found_it[1]
         pyautogui.moveTo(x, y + below)
         time.sleep(0.1)
@@ -85,19 +82,14 @@ def find(image_name, confidence = .8, timeout = 10, region = (0, 0, 1920, 1080))
             return False
             print(f"Timed out, spend too much time looking for {image_name}.")
         found_it = pyautogui.locateOnScreen(image_name, region=region, confidence=confidence)
-        print("looking for {0}...".format(image_name))
     x, y = found_it[0], found_it[1]
-    print("found", image_name)
     return True
     return x, y
 
 def found(image_name, confidence = .8, region = (0, 0, 1920, 1080)):
     result = bool(pyautogui.locateOnScreen(image_name, region=region, confidence=confidence))
     if result:
-        print("found {0}".format(image_name))
-    else:
-        print("didn't find {0}".format(image_name))
-    return bool(pyautogui.locateOnScreen(image_name, region=region, confidence=confidence))
+        return bool(pyautogui.locateOnScreen(image_name, region=region, confidence=confidence))
 
 if __name__ == "__main__":
     # test some stuff
