@@ -101,12 +101,12 @@ class ButtonBox(object):
         if type(self.button_options) == list or tuple:
             for index, text in enumerate(self.button_options):
                 if index < 10:
-                    button = tk.Button(self.root, text=f"{index + 1}: {text}", font=self.btnfont, command=lambda index=index: self.finish(self.button_options[index]))
+                    button = tk.Button(self.root, text=text, font=self.btnfont, command=lambda index=index: self.finish(self.button_options[index]))
                     button.grid(row=3, column=index, padx=25, pady=10)
                     self.buttons.append(button)
                     self.root.bind(str(index + 1), lambda event, index=index: self.finish(self.button_options[index]))
-            tk.Button(self.root, text="Cancel", font=self.btnfont, command=self.root.destroy).grid(row=4, columnspan=len(self.button_options), padx=25, pady=10)
-            self.root.bind("<Escape>", lambda event: self.root.destroy())
+            tk.Button(self.root, text="Cancel", font=self.btnfont, command=lambda: self.finish(None)).grid(row=4, columnspan=len(self.button_options), padx=25, pady=10)
+            self.root.bind("<Escape>", lambda event: self.finish(None))
             self.root.bind("<Return>", lambda event: self.finish(self.button_options[self.selected_button_index]))
 
         # Bind arrow keys to move highlighted button and Enter key to select highlighted button
@@ -119,8 +119,8 @@ class ButtonBox(object):
         return self.value
 
     def finish(self, value):
-        self.value = value
-        self.root.destroy()
+            self.value = value
+            self.root.destroy()
 
 class InputBox(object):
     '''
@@ -255,6 +255,59 @@ class DoubleInputBox(object):
         self.root.bind("<Escape>", lambda e = None: self.root.destroy())
         self.root.mainloop()
 
+loading_permissions = False
+loading_list = [".   ", "..  ", "... ", "...."]
+done_list = ["Done!", "     ", "Done!", "     ", "Done!", "     ", "Done!"]
+
+
+class LoadingBar(object):
+    global loading_permissions
+    def __init__(self, text, win_background="white", Lbg="white", Lfg="black", justify=CENTER, font=("consolas", 15), x_position=0, y_position=-50):
+        self.root = None
+        self.text = text
+        self.win_background = win_background
+        self.Lbg = Lbg
+        self.Lfg = Lfg
+        self.justify = justify
+        self.font = font
+        self.x_position = x_position
+        self.y_position = y_position
+        
+        
+        
+    def center(self):
+        self.root.update_idletasks()
+        width, height = (self.root.winfo_width(), self.root.winfo_height())
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2) + self.x_position
+        y = (self.root.winfo_screenheight() // 2) - (height // 2) + self.y_position
+        self.root.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+
+    def update_done_label(self, i):
+        self.loading_label.config(text=done_list[i % len(done_list)], justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font )
+        if i < 7:
+            self.root.after(400, self.update_done_label, i+1)
+        else:
+            self.root.destroy()
+
+    def update_loading_label(self, i):
+        self.loading_label.config(
+            text=self.text + loading_list[i % len(loading_list)], justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font)
+        if loading_permissions:
+            self.root.after(400, self.update_loading_label, i+1)
+        else:
+            self.update_done_label(0)
+
+    def loading_bar(self):
+        self.root = tk.Tk()
+        self.root.attributes("-topmost", True)
+        self.root.overrideredirect(True)
+        self.loading_label = tk.Label(self.root, text=self.text, justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font)
+        self.loading_label.pack()
+        self.update_loading_label(0)
+        self.center()
+        self.root.mainloop()
+        self.root.wait_window(self.root)
+
 
 def message(text=None, title=None, button_options="Ok", win_background="white", Lbg="white", Lfg="black"):
     # text: the text to be displayed, title: the title of the window, button_options: the text displayed on the buttons, 
@@ -297,3 +350,16 @@ def double_input(label1=None, label2=None, title=None, mask1=None, mask2="*",
         print(e)
         final_result = None
     return final_result
+
+def loading_bar(text=None, win_background="white", Lbg="white", Lfg="black", x_position=0, y_position=-50):
+    global loading_permissions
+    loading_permissions = True
+    try:
+        LoadingBar(text=text, win_background=win_background, Lbg=Lbg, Lfg=Lfg, x_position=x_position, y_position=y_position).loading_bar()
+    except tk.TclError:
+        pass
+
+def loading_bar_done():
+    global loading_permissions
+    loading_permissions = False
+
