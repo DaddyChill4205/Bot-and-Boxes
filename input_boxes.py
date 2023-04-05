@@ -257,7 +257,7 @@ class DoubleInputBox(object):
 
 loading_permissions = False
 loading_list = [".   ", "..  ", "... ", "...."]
-done_list = ["Done!", "     ", "Done!", "     ", "Done!", "     ", "Done!"]
+done_list = ["Done!", "     ", "Done!", "     ", "Done!"]
 
 
 class LoadingBar(object):
@@ -283,9 +283,9 @@ class LoadingBar(object):
         self.root.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
     def update_done_label(self, i):
-        self.loading_label.config(text=done_list[i % len(done_list)], justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font )
+        self.loading_label.config(text=done_list[i % len(done_list)], justify=self.justify, bg=self.win_background, fg=self.Lfg, font=self.font )
         if i < 7:
-            self.root.after(400, self.update_done_label, i+1)
+            self.root.after(200, self.update_done_label, i+1)
         else:
             self.root.destroy()
 
@@ -300,8 +300,7 @@ class LoadingBar(object):
     def loading_bar(self):
         self.root = tk.Tk()
         self.root.attributes("-topmost", True)
-        self.root.overrideredirect(True)
-        self.loading_label = tk.Label(self.root, text=self.text, justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font)
+        self.loading_label = tk.Label(self.root, text=self.text, justify=self.justify, bg=self.win_background, fg=self.Lfg, font=self.font)
         self.loading_label.pack()
         self.update_loading_label(0)
         self.center()
