@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from typing import Optional, Tuple
-
+from PIL import Image, ImageTk
 
 '''
 MESSAGE_BOXES V.1.0.0
@@ -256,56 +256,57 @@ class DoubleInputBox(object):
         self.root.mainloop()
 
 loading_permissions = False
-loading_list = [".   ", "..  ", "... ", "...."]
-done_list = ["Done!", "     ", "Done!", "     ", "Done!"]
-
 
 class LoadingBar(object):
     global loading_permissions
-    def __init__(self, text, win_background="white", Lbg="white", Lfg="black", justify=CENTER, font=("consolas", 15), x_position=0, y_position=-50):
-        self.root = None
-        self.text = text
-        self.win_background = win_background
-        self.Lbg = Lbg
-        self.Lfg = Lfg
-        self.justify = justify
-        self.font = font
-        self.x_position = x_position
-        self.y_position = y_position
-        
-        
-        
+    def __init__(self, text="DO NOT MOVE MOUSE", gif_path="C:\\Program Files\\Python\\Lib\\bot_and_boxes\\loading wheel.gif", speed=50, xscale=1, yscale=1, xpos=0, ypos=-50):
+            self.root = None
+            self.text = text
+            self.gif_path = gif_path
+            self.speed = speed
+            self.xscale = xscale
+            self.yscale = yscale
+            self.xpos = xpos
+            self.ypos = ypos
+            
+            
+
     def center(self):
         self.root.update_idletasks()
         width, height = (self.root.winfo_width(), self.root.winfo_height())
-        x = (self.root.winfo_screenwidth() // 2) - (width // 2) + self.x_position
-        y = (self.root.winfo_screenheight() // 2) - (height // 2) + self.y_position
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2) + self.xpos
+        y = (self.root.winfo_screenheight() // 2) - (height // 2) + self.ypos
         self.root.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
-    def update_done_label(self, i):
-        self.loading_label.config(text=done_list[i % len(done_list)], justify=self.justify, bg=self.win_background, fg=self.Lfg, font=self.font )
-        if i < 7:
-            self.root.after(200, self.update_done_label, i+1)
-        else:
-            self.root.destroy()
+    def update_frame(self, frame_number):
+        global loading_permissions
+        if self.root and self.loading_label:
+            self.loading_label.config(image=self.frames[frame_number])
+            if loading_permissions:
+                self.root.after(self.speed, self.update_frame, (frame_number + 1) % len(self.frames))
+            else:
+                self.loading_label.destroy()
+                self.root.destroy()
 
-    def update_loading_label(self, i):
-        self.loading_label.config(
-            text=self.text + loading_list[i % len(loading_list)], justify=self.justify, bg=self.Lbg, fg=self.Lfg, font=self.font)
-        if loading_permissions:
-            self.root.after(400, self.update_loading_label, i+1)
-        else:
-            self.update_done_label(0)
-
-    def loading_bar(self):
+    
+    def loading_screen(self):
         self.root = tk.Tk()
         self.root.attributes("-topmost", True)
-        self.loading_label = tk.Label(self.root, text=self.text, justify=self.justify, bg=self.win_background, fg=self.Lfg, font=self.font)
-        self.loading_label.pack()
-        self.update_loading_label(0)
+        self.root['bg'] = '#FAF3F2'
+        self.root.overrideredirect(1)
+        self.image = Image.open(self.gif_path)
+        self.frames = []
+        for frame in range(0, self.image.n_frames):
+            self.image.seek(frame)
+            resized_image = self.image.resize((int(self.image.size[0] * self.xscale), int(self.image.size[1] * self.yscale)))
+            self.frames.append(ImageTk.PhotoImage(resized_image))
+        self.information_label = Label(self.root, text=self.text, font=("Arial", 15), bg="#FAF3F2")
+        self.information_label.grid(row=0, column=0, padx=10, pady=10)
+        self.loading_label = Label(self.root, border=0, highlightthickness=0, bg="#FAF3F2")
+        self.loading_label.grid(row=3, column=0, padx=10, pady=10)
+        self.update_frame(0)
         self.center()
         self.root.mainloop()
-        self.root.wait_window(self.root)
 
 
 def message(text=None, title=None, button_options="Ok", win_background="white", Lbg="white", Lfg="black"):
@@ -350,11 +351,11 @@ def double_input(label1=None, label2=None, title=None, mask1=None, mask2="*",
         final_result = None
     return final_result
 
-def loading_bar(text=None, win_background="white", Lbg="white", Lfg="black", x_position=0, y_position=-50):
+def loading_bar(text="DO NOT MOVE MOUSE", gif_path="C:\\Program Files\\Python\\Lib\\bot_and_boxes\\loading wheel.gif", speed=50, xscale=1, yscale=1, xpos=0, ypos=-50):
     global loading_permissions
     loading_permissions = True
     try:
-        LoadingBar(text=text, win_background=win_background, Lbg=Lbg, Lfg=Lfg, x_position=x_position, y_position=y_position).loading_bar()
+        LoadingBar(text=text, gif_path=gif_path, speed=speed, xscale=xscale, yscale=yscale, xpos=xpos, ypos=ypos).loading_screen()
     except tk.TclError:
         pass
 
